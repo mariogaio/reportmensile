@@ -39,9 +39,9 @@ round (prop.table(table(data$SESSO))*100, digits = 1) # frequenza percentuale (u
 
 data_sesso <- as.data.frame(round (prop.table(table(data$SESSO))*100, digits = 1)) # summarize data con frequenze percentuali
 
-rt3 <- rev(data_sesso$Freq)                                                        # semplici operazioni che saranno utili
-pos3 <- cumsum(rt3) - rt3/2                                                        # per il testo delle etichette nel grafico
-lbs3 <- paste(rt3, "%", sep = "")                                                  # e per la loro posizione
+rt3 <- rev(data_sesso$Freq)           # semplici operazioni che saranno utili
+pos3 <- cumsum(rt3) - rt3/2           # per il testo delle etichette nel grafico
+lbs3 <- paste(rt3, "%", sep = "")     # e per la loro posizione
 
 fig3 <- data_sesso %>%
   ggplot(aes(x = factor(1),
@@ -64,22 +64,22 @@ fig3
 
 # Figura 4 - età
 
-data$eta_grp <- data$ETA # aggiungo la variabile eta_grp
-data$eta_grp <- ifelse((data$ETA<18), "<18", 
-                       ifelse((data$ETA>18 & data$ETA<=65), "18-64",
-                              ifelse((data$ETA>64), "65+", ""))) # raggruppo le età per fascia d'età
+data$eta_grp <- data$ETA                                              # aggiungo la variabile eta_grp
+data$eta_grp <- ifelse((data$ETA<18), "<18",                          # e raggruppo le età per 3 fasce d'età:
+                       ifelse((data$ETA>18 & data$ETA<=65), "18-64",  # <18, 18-64 e 65+
+                              ifelse((data$ETA>64), "65+", "")))
 
 data$eta_grp <- factor(data$eta_grp, levels=c("<18", "18-64", "65+")) # ordino le fasce d'età in ordine crescente
 
-table(data$eta_grp) # frequenza assoluta
-round(prop.table(table(data$eta_grp))*100, digits =1) #frequenza percentuale
+table(data$eta_grp)                                    # frequenza assoluta (utile per il testo del report)
+round(prop.table(table(data$eta_grp))*100, digits =1)  # frequenza percentuale (utile per il testo del report)
 
-data_eta <- as.data.frame(table(data$eta_grp)) # summarize data
+data_eta <- as.data.frame(table(data$eta_grp))         # summarize data
 
 fig4 <- data_eta %>%
   ggplot(aes(x = Var1, y = Freq, width = 0.4)) +
   geom_bar(stat = "identity", show.legend = FALSE, fill = "#a65852") +
-  geom_text(aes(label = Freq), vjust = -0.5) + # aggiungo frequenze sulle barre
+  geom_text(aes(label = Freq), vjust = -0.5) +                              # aggiungo frequenze sulle barre
   theme_classic() +
   labs(x = "Fascia d'età (anni)", y = "N. di segnalazioni") +
   theme(axis.title.y = element_text(margin = margin(r = 20))) +
@@ -89,19 +89,20 @@ fig4
 
 # Figura 5 - fonte di segnalazione
 
-data$FONTE [ which(data$FONTE == "MEDICO")] <- "Medico"
+data$FONTE [ which(data$FONTE == "MEDICO")] <- "Medico" 
 data$FONTE [ which(data$FONTE == "PAZIENTE/CITTADINO O ALTRA FIGURA PROFESSIONALE NON SANITARIA")] <- "Paziente/cittadino"
 data$FONTE [ which(data$FONTE == "FARMACISTA")] <- "Farmacista"
 data$FONTE [ which(data$FONTE == "ALTRO OPERATORE SANITARIO")] <- "Altro operatore sanitario"
 data$FONTE [ which(data$FONTE == "LETTERATURA")] <- "Letteratura"
 data$FONTE [ which(data$FONTE == "AVVOCATO")] <- "Avvocato"
 data$FONTE [ which(data$FONTE == "FORZE ARMATE")] <- "Forze armate"
-data$FONTE [ which(data$FONTE == "NON DEFINITO")] <- "Non definito"
+data$FONTE [ which(data$FONTE == "NON DEFINITO")] <- "Non definito" # modificate i campi della variabile data$FONTE
+                                                    
+data$FONTE <- factor(data$FONTE,                                                     # ordino le fonti. Preferibile riordinarle all'occorrenza,                                              
+                     levels=c("Medico", "Farmacista", "Altro operatore sanitario"))  # in modo da avere un ordine sempre decrescente
 
-data$FONTE <- factor(data$FONTE, levels=c("Medico", "Farmacista", "Altro operatore sanitario")) # ordino le fonti (NB RIORDINARE ALL'OCCORRENZA!)
-
-table(data$FONTE) # frequenza assoluta
-round (prop.table(table(data$FONTE))*100, digits = 1) # frequenza percentuale
+table(data$FONTE)                                     # frequenza assoluta (utile per il testo del report)
+round (prop.table(table(data$FONTE))*100, digits = 1) # frequenza percentuale (utile per il testo del report)
 
 data_fonte <- as.data.frame(table(data$FONTE)) # summarize data
 
@@ -126,12 +127,13 @@ data$subgrave <- ifelse((data$GRAVITA=="GRAVE - ALTRA CONDIZIONE CLINICAMENTE RI
                                                 ifelse((data$GRAVITA=="GRAVE - OSPEDALIZZAZIONE O PROLUNGAMENTO OSPEDALIZZAZIONE"), "Grave - Ospedalizzazione",
                                                         ifelse((data$GRAVITA=="GRAVE - PERICOLO DI VITA"), "Grave - Pericolo di vita",
                                                                 ifelse((data$GRAVITA=="NON DEFINITO"), "Non definito",
-                                                                        ifelse((data$GRAVITA=="NON GRAVE"), "Non grave", ""))))))))
+                                                                        ifelse((data$GRAVITA=="NON GRAVE"), "Non grave", "")))))))) # ho modificato i campi della variabile data$GRAVITA
                               
-table(data$subgrave) # frequenza assoluta
-round (prop.table(table(data$subgrave))*100, digits = 1) # frequenza percentuale
+table(data$subgrave)                                     # frequenza assoluta (utile per il testo del report)
+round (prop.table(table(data$subgrave))*100, digits = 1) # frequenza percentuale (utile per il testo del report)
 
 data_gravita <- as.data.frame(round (prop.table(table(data$subgrave))*100, digits = 1))
+
 rt6 <- rev(data_gravita$Freq)
 pos6 <- cumsum(rt6) - rt6/2
 lbs6 <- paste(rt6, "%", sep = "")
@@ -144,14 +146,15 @@ fig6 <- data_gravita %>%
   coord_polar(theta = "y",
               direction = -1) +
   theme_void() +
-  geom_label(x = 1.4,                         # etichette all'esterno
+  geom_label(x = 1.4,                                       # etichette all'esterno
              y = pos6,
              aes(label = lbs6),
              fill = "lightyellow", 
              size = 3.5) +
   labs(fill = "Gravità") +
-  theme(legend.position = "right", legend.title = element_text(face="bold")) +
-  scale_fill_manual(values = wes_palette("Darjeeling2"))
+  theme(legend.position = "right",
+        legend.title = element_text(face="bold")) +
+  scale_fill_manual(values = wes_palette("Darjeeling2"))    # scelgo una palette cromatica, in questo caso quella del film "Il treno per il Darjeeling"
 
 fig6
 
@@ -162,10 +165,10 @@ data$ESITO <- ifelse((data$ESITO=="DECESSO"), "Decesso",
                             ifelse((data$ESITO=="NON ANCORA GUARITO"), "Non ancora guarito",
                                    ifelse((data$ESITO=="NON DISPONIBILE"), "Non disponibile",
                                           ifelse((data$ESITO=="RISOLUZIONE COMPLETA ADR IL"), "Risoluzione completa",
-                                                 ifelse((data$ESITO=="RISOLUZIONE CON POSTUMI"), "Risoluzione con postumi", ""))))))
+                                                 ifelse((data$ESITO=="RISOLUZIONE CON POSTUMI"), "Risoluzione con postumi", "")))))) # ho modificato i campi della variabile data$ESITO
 
-table(data$ESITO) # frequenza assoluta
-round (prop.table(table(data$ESITO))*100, digits = 1) # frequenza percentuale
+table(data$ESITO)                                     # frequenza assoluta (utile per il testo del report)
+round (prop.table(table(data$ESITO))*100, digits = 1) # frequenza percentuale (utile per il testo del report)
 
 data_esito <- as.data.frame(round (prop.table(table(data$ESITO))*100, digits = 1))
 rt7 <- rev(data_esito$Freq)
@@ -180,30 +183,30 @@ fig7 <- data_esito %>%
   coord_polar(theta = "y",
               direction = -1) +
   theme_void() +
-  geom_label(x = 1.4,                         # etichette all'esterno
+  geom_label(x = 1.4,                                   # etichette all'esterno
              y = pos7,
              aes(label = lbs7),
              fill = "lightyellow", 
              size = 3.5) +
   labs(fill = "Esito") +
-  theme(legend.position = "right", legend.title = element_text(face="bold")) +
-  scale_fill_manual(values = wes_palette("Moonrise3"))
-
+  theme(legend.position = "right",
+        legend.title = element_text(face="bold")) +
+  scale_fill_manual(values = wes_palette("Moonrise3"))  # scelgo una palette cromatica, in questo caso quella del film "Moonrise Kingdom"
 fig7
 
 # Figura 8 - ATC
 
 atc_set <- tidyr::separate_rows(data = data, ATC, sep =",") # separo i codici ATC sfruttando il separatore "virgola"
 
-table(atc_set$ATC) # frequenza assoluta
-round(prop.table(table(atc_set$ATC))*100, digits=1) #frequenza percentuale
+table(atc_set$ATC)                                  # frequenza assoluta (utile per il testo del report)
+round(prop.table(table(atc_set$ATC))*100, digits=1) # frequenza percentuale (utile per il testo del report)
 
-data_atc <- as.data.frame(table(atc_set$ATC)) # summarize data
+data_atc <- as.data.frame(table(atc_set$ATC))
 
 fig8 <- data_atc %>%
   ggplot(aes(x = Var1, y = Freq, width = 0.4)) +
   geom_bar(stat = "identity", show.legend = FALSE, fill = "#2c7c94") +
-  geom_text(aes(label = Freq), vjust = -0.5) + # aggiungo frequenze sulle barre
+  geom_text(aes(label = Freq), vjust = -0.5) +                              # aggiungo frequenze sulle barre
   theme_classic() +
   labs(x = "Classe ATC", y = "N. di segnalazioni") +
   theme(axis.title.y = element_text(margin = margin(r = 20))) +
@@ -211,15 +214,18 @@ fig8 <- data_atc %>%
 
 fig8
 
-# export figure
+# export figure (scelgo di esportarle in .png senza esplicitare la directory, quindi finirà nella directory del progetto)
 
 ggsave(fig2, file = "Fig2.png")
 ggsave(fig3, file = "Fig3.png")
 ggsave(fig4, file = "Fig4.png")
 ggsave(fig5, file = "Fig5.png")
-ggsave(fig6, file = "Fig6.png", width = 7, height = 4)
-ggsave(fig7, file = "Fig7.png", width = 7, height = 4)
+ggsave(fig6, file = "Fig6.png", width = 7, height = 4) # nel caso delle figure 6 e 7 scelgo manualmente le dimensioni
+ggsave(fig7, file = "Fig7.png", width = 7, height = 4) # perché le dimensioni di default non erano adatte al tipo di grafico
 ggsave(fig8, file = "Fig8.png")
+
+# A questo punto abbiamo tutti i grafici necessari per redigere il report mensile
+# ma nel testo del report possono essere utili altre informazioni, ad esempio:
 
 # nessi
 data$NESSO <- ifelse((data$NESSO=="CORRELABILE"), "correlabile",
