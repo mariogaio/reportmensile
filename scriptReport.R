@@ -1,3 +1,8 @@
+# install.packages
+install.packages("readxl")
+install.packages("tidyverse")
+install.packages("wesanderson")
+
 # libraries
 library(readxl) # per importare file excel
 library(tidyverse)
@@ -206,7 +211,7 @@ data_atc <- as.data.frame(table(atc_set$ATC))
 fig8 <- data_atc %>%
   ggplot(aes(x = Var1, y = Freq, width = 0.4)) +
   geom_bar(stat = "identity", show.legend = FALSE, fill = "#2c7c94") +
-  geom_text(aes(label = Freq), vjust = -0.5) +                              # aggiungo frequenze sulle barre
+  geom_text(aes(label = Freq), vjust = -0.5) +                            # aggiungo frequenze sulle barre
   theme_classic() +
   labs(x = "Classe ATC", y = "N. di segnalazioni") +
   theme(axis.title.y = element_text(margin = margin(r = 20))) +
