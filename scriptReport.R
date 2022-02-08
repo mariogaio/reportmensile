@@ -242,7 +242,3 @@ table(data$NESSO)
 
 # richieste inviate
 sum(data$MAIL != 0, na.rm = TRUE) # numero email inviate
-
-
-
-
