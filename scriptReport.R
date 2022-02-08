@@ -1,15 +1,14 @@
 # libraries
-library(readxl)
+library(readxl) # per importare file excel
 library(tidyverse)
-library(ggforce)
-library(wesanderson)
-library(extrafont)
-font_import()
-loadfonts(device="win")
-fonts() 
+library(wesanderson) # ci sono le mie palette preferite
 
-# import
-data <- read_excel("gennaio2022.xlsx")
+# il primo passo è aprire un nuovo progetto (File -> New Project... -> New Directory -> New Project)
+# e scegliere una cartella di destinazione e il nome della directory
+
+# importare il file excel del mese di interesse
+#(maggiori informazioni sulla struttura del file nel README)
+data <- read_excel("gennaio2022.xlsx") # in questo caso si chiama semplicemente "gennaio2022.xlsx" e non ho esplicitato il percorso del file perché questo è presente nella directory del progetto
 
 # Figura 1 - andamento mensile ((da rivedere))
 
@@ -17,30 +16,32 @@ data <- read_excel("gennaio2022.xlsx")
 # Figura 2 - andamento settimanale
 
 data_week <- as.data.frame(table(data$Settimana)) # summarize data
+data_week                                         # puoi "stampare" il dataframe appena creato per visualizzarlo in Console e scoprire che le due variabili si chiamano "Var1" e "Freq"
 
-fig2 <- data_week %>%
-  ggplot(aes(x = Var1, y = Freq, width = 0.4)) +
-  geom_bar(stat = "identity", show.legend = FALSE, fill = "#2c7c94") +
-  geom_text(aes(label = Freq), vjust = -0.5) + # aggiungo frequenze sulle barre
-  theme_classic() +
-  labs(x = "Settimana", y = "N. di segnalazioni") +
-  theme(axis.title.y = element_text(margin = margin(r = 20))) +
-  theme(axis.title.x = element_text(margin = margin(r = 70)))
+fig2 <- data_week %>%                                                     # chiamo il grafico fig2 e lavoro sul dataframe data_week
+  ggplot(aes(x = Var1, y = Freq, width = 0.4)) +                          # sfrutto ggplot, scelgo le variabili in x e y e la dimensione delle barre
+  geom_bar(stat = "identity", show.legend = FALSE, fill = "#2c7c94") +    # rimuovo la legenda e definisco il colore (fill)
+  geom_text(aes(label = Freq), vjust = -0.5) +                            # aggiungo frequenze sulle barre e con vjust regolo la distanza testo/barre
+  theme_classic() +                                                       # scelgo il tema che preferisco
+  labs(x = "Settimana", y = "N. di segnalazioni") +                       # rinomino gli assi
+  theme(axis.title.y = element_text(margin = margin(r = 20))) +           # regolo la distanza labs/ordinata
+  theme(axis.title.x = element_text(margin = margin(r = 70)))             # regolo la distanza labs/ascissa
 
-fig2
+fig2  # stampo il grafico
 
 # Figura 3 - sesso
 
 data$SESSO <- ifelse((data$SESSO=="F"), "Femmine",
-                    ifelse((data$SESSO=="M"), "Maschi", ""))
+                    ifelse((data$SESSO=="M"), "Maschi", "")) # rinomino "F" e "M" con "Femmine" e "Maschi"
 
-table(data$SESSO) # frequenza assoluta
-round (prop.table(table(data$SESSO))*100, digits = 1) # frequenza percentuale e conversione in dataframe
+table(data$SESSO)                                     # frequenza assoluta (utile per il testo del report)
+round (prop.table(table(data$SESSO))*100, digits = 1) # frequenza percentuale (utile per il testo del report)
 
-data_sesso <- as.data.frame(round (prop.table(table(data$SESSO))*100, digits = 1))
-rt3 <- rev(data_sesso$Freq)
-pos3 <- cumsum(rt3) - rt3/2
-lbs3 <- paste(rt3, "%", sep = "")
+data_sesso <- as.data.frame(round (prop.table(table(data$SESSO))*100, digits = 1)) # summarize data con frequenze percentuali
+
+rt3 <- rev(data_sesso$Freq)                                                        # semplici operazioni che saranno utili
+pos3 <- cumsum(rt3) - rt3/2                                                        # per il testo delle etichette nel grafico
+lbs3 <- paste(rt3, "%", sep = "")                                                  # e per la loro posizione
 
 fig3 <- data_sesso %>%
   ggplot(aes(x = factor(1),
@@ -50,14 +51,14 @@ fig3 <- data_sesso %>%
   coord_polar(theta = "y",
               direction = -1) +
   theme_void() +
-  geom_label(x = 1.3,                         # etichette all'esterno
+  geom_label(x = 1.3,                                  # per posizionare le etichette all'esterno
              y = pos3,
              aes(label = lbs3),
-             fill = "lightyellow", 
+             fill = "lightyellow",                     # colore di sfondo delle etichette
              size = 3.5) +
   labs(fill = "Sesso") +
-  theme(legend.title = element_text(face="bold")) +
-  scale_fill_manual(values = c("#a65852", "#2c7c94"))
+  theme(legend.title = element_text(face="bold")) +    # per grassettare il titolo della legenda
+  scale_fill_manual(values = c("#a65852", "#2c7c94"))  # scelgo i colori delle due fette di torta
 
 fig3
 
