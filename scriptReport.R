@@ -1,27 +1,31 @@
+# il primo passo è aprire un nuovo progetto (File -> New Project... -> New Directory -> New Project)
+# e scegliere una cartella di destinazione e il nome della directory
+
 # install.packages
 install.packages("readxl")
 install.packages("tidyverse")
 install.packages("wesanderson")
 
 # libraries
-library(readxl) # per importare file excel
+library(readxl)      # per importare file excel
 library(tidyverse)
 library(wesanderson) # ci sono le mie palette preferite
 
-# il primo passo è aprire un nuovo progetto (File -> New Project... -> New Directory -> New Project)
-# e scegliere una cartella di destinazione e il nome della directory
-
-# importare il file excel del mese di interesse
-#(maggiori informazioni sulla struttura del file nel README)
-data <- read_excel("gennaio2022.xlsx") # in questo caso si chiama semplicemente "gennaio2022.xlsx" e non ho esplicitato il percorso del file perché questo è presente nella directory del progetto
+# importare dataset (maggiori informazioni sulla struttura del file nel README)
+data <- read_excel("gennaio2022.xlsx") # in questo caso si chiama semplicemente "gennaio2022.xlsx" e
+                                       # non ho esplicitato il percorso del file perché
+                                       # questo è presente nella directory del progetto.
+                                       # Per evitare errori, consiglio di importare il dataset cliccando
+                                       # su "Import dataset" nel quadrante in alto a destra di RStudio
 
 # Figura 1 - andamento mensile ((da rivedere))
-
 
 # Figura 2 - andamento settimanale
 
 data_week <- as.data.frame(table(data$Settimana)) # summarize data
 data_week                                         # puoi "stampare" il dataframe appena creato per visualizzarlo in Console e scoprire che le due variabili si chiamano "Var1" e "Freq"
+
+data$eta_grp <- factor(data$eta_grp, levels=c("data1", "data2", "data3", "data4")) # vanno inserite le fasce settimanali in ordine
 
 fig2 <- data_week %>%                                                     # chiamo il grafico fig2 e lavoro sul dataframe data_week
   ggplot(aes(x = Var1, y = Freq, width = 0.4)) +                          # sfrutto ggplot, scelgo le variabili in x e y e la dimensione delle barre
