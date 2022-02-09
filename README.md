@@ -19,4 +19,6 @@ Nota bene: per evitare di modificare lo script di R, è obbligatorio rispettare 
 ## Alcuni possibili problemi e possibili soluzioni  
 **Problema 1**: R non va molto d'accordo con Excel, quindi potrebbero manifestarsi errori nell'importazione del dataset.  
 _Soluzione A_: Prova a importare il dataset con l'aiuto di di RStudio, cliccando su "import dataset", solitamente presente nel quadrante in alto a destra, e segui le istruzioni.  
-_Soluzione B_: R va molto d'accordo con i file in formato .csv, quindi si potrebbe salvare il proprio dataset in .csv e importarlo in .csv.
+_Soluzione B_: R va molto d'accordo con i file in formato .csv, quindi si potrebbe salvare il proprio dataset in .csv e importarlo in .csv.  
+**Problema 2**: Si potrebbe manifestare un errore grafico di qualunque tipo.  
+_Soluzione_: Non c'è una soluzione univoca, quindi nel peggiore dei casi contattami.
