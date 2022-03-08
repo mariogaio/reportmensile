@@ -18,7 +18,23 @@ data <- read_excel("gennaio2022.xlsx") # in questo caso si chiama semplicemente 
                                        # Per evitare errori, consiglio di importare il dataset cliccando
                                        # su "Import dataset" nel quadrante in alto a destra di RStudio
 
-# Figura 1 - andamento mensile ((da rivedere))
+# Figura 1 - andamento mensile
+
+data_month <- data.frame(mese = c("Gennaio", "Febbraio"),
+                         n = c(137, 67))                    # riporto manualmente il numero di segnalazione dei mesi di interesse
+
+data_month$mese <- factor(data_month$mese, levels = c("Gennaio", "Febbraio")) # ordino i mesi in ordine cronologico
+
+data_month %>%
+  ggplot(aes(x = mese, y = n, width = 0.4)) +
+  geom_bar(stat = "identity", show.legend = FALSE, fill = "#2c7c94") +
+  geom_text(aes(label = n), vjust = -0.5) + # aggiungo frequenze sulle barre
+  theme_classic() +
+  labs(x = "Mese", y = "N. di segnalazioni") +
+  theme(axis.title.y = element_text(margin = margin(r = 20))) +
+  theme(axis.title.x = element_text(margin = margin(r = 70)))
+
+round((67-137)/137*100, digits = 1) # calcolo l'incremento percentuale
 
 # Figura 2 - andamento settimanale
 
@@ -249,5 +265,7 @@ n_vax
 
 table(data$NESSO)
 
-# richieste inviate
-sum(data$MAIL != 0, na.rm = TRUE) # numero email inviate
+# numero di richieste inviate
+sum(data$MAIL != 0, na.rm = TRUE)
+# numero di richieste evase
+sum(data$ESITO_RICHIESTA != 0, na.rm = TRUE)
