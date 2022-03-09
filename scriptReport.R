@@ -25,7 +25,7 @@ data_month <- data.frame(mese = c("Gennaio", "Febbraio"),
 
 data_month$mese <- factor(data_month$mese, levels = c("Gennaio", "Febbraio")) # ordino i mesi in ordine cronologico
 
-data_month %>%
+fig1 <- data_month %>%
   ggplot(aes(x = mese, y = n, width = 0.4)) +
   geom_bar(stat = "identity", show.legend = FALSE, fill = "#2c7c94") +
   geom_text(aes(label = n), vjust = -0.5) + # aggiungo frequenze sulle barre
@@ -33,6 +33,8 @@ data_month %>%
   labs(x = "Mese", y = "N. di segnalazioni") +
   theme(axis.title.y = element_text(margin = margin(r = 20))) +
   theme(axis.title.x = element_text(margin = margin(r = 70)))
+
+fig1
 
 round((67-137)/137*100, digits = 1) # calcolo l'incremento percentuale
 
@@ -241,13 +243,14 @@ fig8
 
 # export figure (scelgo di esportarle in .png senza esplicitare la directory, quindi finirà nella directory del progetto)
 
-ggsave(fig2, file = "Fig2.png")
-ggsave(fig3, file = "Fig3.png")
-ggsave(fig4, file = "Fig4.png")
-ggsave(fig5, file = "Fig5.png")
-ggsave(fig6, file = "Fig6.png", width = 7, height = 4) # nel caso delle figure 6 e 7 scelgo manualmente le dimensioni
-ggsave(fig7, file = "Fig7.png", width = 7, height = 4) # perché le dimensioni di default non erano adatte al tipo di grafico
-ggsave(fig8, file = "Fig8.png")
+ggsave(fig1, file = "Fig1.png", width = 7, height = 4) # widht e height per scegliere manualmente le dimensioni (si possono modificare i valori in base alla necessità)
+ggsave(fig2, file = "Fig2.png", width = 7, height = 4)
+ggsave(fig3, file = "Fig3.png", width = 7, height = 4)
+ggsave(fig4, file = "Fig4.png", width = 7, height = 4)
+ggsave(fig5, file = "Fig5.png", width = 7, height = 4)
+ggsave(fig6, file = "Fig6.png", width = 7, height = 4) 
+ggsave(fig7, file = "Fig7.png", width = 7, height = 4)
+ggsave(fig8, file = "Fig8.png", width = 7, height = 4)
 
 # A questo punto abbiamo tutti i grafici necessari per redigere il report mensile
 # ma nel testo del report possono essere utili altre informazioni, ad esempio:
